@@ -36,8 +36,8 @@ private:
     int size; // To store current number of elements
     int cap; // Initial capacity of the table
     double loadfactor = 0.8;
-    int EMPTY = -1;    // Marker for empty slots (removed const)
-    int DELETED = -2;  // Special marker for deleted slots (removed const)
+    int empty = -1;    // Marker for empty slots (removed const)
+    int deleted = -2;  // Special marker for deleted slots (removed const)
 
     // Hash Function Given
     int hash(int key) const 
@@ -55,17 +55,17 @@ private:
     void resize() 
     {
         int newCap = nextSize(cap * 2); //New size of the table
-        std::vector<int> newTable(newCap, EMPTY); 
+        std::vector<int> newTable(newCap, empty); 
 
         // Putting the keys in the new table
         for (int i = 0; i < cap; i++) 
         {
-            if (table[i] != EMPTY && table[i] != DELETED) 
+            if (table[i] != empty && table[i] != deleted) 
             { // To check that it is not empty or deleted
                 int key = table[i];
                 int newHash = key % newCap;
                 int j = 0;
-                while (newTable[(newHash + j * j) % newCap] != EMPTY) 
+                while (newTable[(newHash + j * j) % newCap] != empty) 
                 {
                     j++;
                 }
@@ -81,7 +81,7 @@ public:
     HashTable(int initialSize) 
     {
         cap = nextSize(initialSize); // Ensure that the size is a prime number
-        table = std::vector<int>(cap, EMPTY); // Initialize table with empty slots
+        table = std::vector<int>(cap, empty); // Initialize table with empty slots
         size = 0;
     }
 
@@ -104,7 +104,7 @@ public:
         while (i < cap) 
         {
             int index = probe(key, i);
-            if (table[index] == EMPTY || table[index] == DELETED) // check for an empty or deleted slot
+            if (table[index] == empty || table[index] == deleted) // check for an empty or deleted slot
             { 
                 table[index] = key;
                 size++;
@@ -125,11 +125,11 @@ public:
             int index = probe(key, i);
             if (table[index] == key) 
             {
-                table[index] = DELETED; // Marking the key as deleted
+                table[index] = deleted; // Marking the key as deleted
                 size--;
                 return;
             } 
-            else if (table[index] == EMPTY) 
+            else if (table[index] == empty) 
             { // Stop searching if we hit an empty slot during probing
                 std::cout << "Element not found" << std::endl;
                 return;
@@ -149,7 +149,7 @@ public:
             {
                 return index; // found key so returns index
             } 
-            else if (table[index] == EMPTY) 
+            else if (table[index] == empty) 
             { // Stopping search if we hit empty slot while quadratic probing
                 return -1;
             }
@@ -162,11 +162,11 @@ public:
     {
         for (int i = 0; i < cap; i++) 
         {
-            if (table[i] == EMPTY) 
+            if (table[i] == empty) 
             {
                 std::cout << "- ";
             } 
-            else if (table[i] == DELETED) 
+            else if (table[i] == deleted) 
             {
                 std::cout << "- "; // Treat deleted slots as empty in print
             } 
